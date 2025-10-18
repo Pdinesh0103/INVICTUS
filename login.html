@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edu-Gen Prime: Lesson Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <!-- Login Page -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+        <div class="glass-pane p-8 rounded-2xl w-full max-w-md">
+            <!-- Logo/Header -->
+            <div class="text-center mb-8">
+                <h1 class="orbitron text-3xl font-bold glowing-text">Edu-Gen Prime</h1>
+                <p class="text-cyan-300 mt-2">Access The Future of Education</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="space-y-6">
+                <h2 class="orbitron text-xl font-semibold text-center text-cyan-300">Sign In</h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="login-username" class="block text-sm font-medium text-gray-400 mb-1">Username or Email</label>
+                        <input type="text" id="login-username" class="w-full p-3 rounded-lg form-input" placeholder="Enter username or email">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-400 mb-1">Password</label>
+                        <input type="password" id="login-password" class="w-full p-3 rounded-lg form-input" placeholder="Enter password">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center text-sm text-gray-400">
+                            <input type="checkbox" id="remember-me" class="mr-2 form-checkbox text-cyan-500">
+                            Remember me
+                        </label>
+                        <button type="button" id="forgot-password" class="text-sm text-cyan-400 hover:underline">Forgot password?</button>
+                    </div>
+                </div>
+
+                <button id="login-btn" class="w-full btn-primary py-3 px-4 rounded-lg font-bold orbitron">
+                    <span id="login-spinner" class="animate-spin mr-3 h-5 w-5 hidden">⟳</span>
+                    <span id="login-text">ACCESS SYSTEM</span>
+                </button>
+
+                <div class="text-center">
+                    <span class="text-gray-400 text-sm">New to Edu-Gen Prime?</span>
+                    <button id="show-signup" class="text-cyan-400 hover:underline ml-1 font-medium">Create Account</button>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form" class="space-y-6 hidden">
+                <h2 class="orbitron text-xl font-semibold text-center text-cyan-300">Create Account</h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="signup-fullname" class="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
+                        <input type="text" id="signup-fullname" class="w-full p-3 rounded-lg form-input" placeholder="Enter your full name">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+
+                    <div>
+                        <label for="signup-email" class="block text-sm font-medium text-gray-400 mb-1">Email</label>
+                        <input type="email" id="signup-email" class="w-full p-3 rounded-lg form-input" placeholder="Enter your email">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+
+                    <div>
+                        <label for="signup-username" class="block text-sm font-medium text-gray-400 mb-1">Username</label>
+                        <input type="text" id="signup-username" class="w-full p-3 rounded-lg form-input" placeholder="Choose a username">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+
+                    <div>
+                        <label for="signup-password" class="block text-sm font-medium text-gray-400 mb-1">Password</label>
+                        <input type="password" id="signup-password" class="w-full p-3 rounded-lg form-input" placeholder="Create password">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+
+                    <div>
+                        <label for="signup-confirm" class="block text-sm font-medium text-gray-400 mb-1">Confirm Password</label>
+                        <input type="password" id="signup-confirm" class="w-full p-3 rounded-lg form-input" placeholder="Confirm password">
+                        <span class="error-message text-red-400 text-xs hidden"></span>
+                    </div>
+                </div>
+
+                <button id="signup-btn" class="w-full btn-primary py-3 px-4 rounded-lg font-bold orbitron">
+                    <span id="signup-spinner" class="animate-spin mr-3 h-5 w-5 hidden">⟳</span>
+                    <span id="signup-text">CREATE ACCOUNT</span>
+                </button>
+
+                <div class="text-center">
+                    <span class="text-gray-400 text-sm">Already have an account?</span>
+                    <button id="show-login" class="text-cyan-400 hover:underline ml-1 font-medium">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="hidden">
+        <!-- Navigation Header -->
+        <header class="glass-pane border-b border-cyan-500/30">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h1 class="orbitron text-2xl font-bold glowing-text">Edu-Gen Prime</h1>
+                    <nav class="hidden md:flex space-x-6">
+                        <button id="nav-generate" class="text-cyan-300 hover:text-white px-3 py-1 rounded transition-colors border-b-2 border-cyan-500">Generate</button>
+                        <button id="nav-dashboard" class="text-gray-400 hover:text-white px-3 py-1 rounded transition-colors">Dashboard</button>
+                    </nav>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-300">
+                        Welcome, <span id="user-name" class="text-cyan-300 font-semibold"></span>
+                    </div>
+                    <div class="relative">
+                        <button id="profile-dropdown" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+                            <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full flex items-center justify-center">
+                                <span class="text-sm font-bold" id="user-initials">U</span>
+                            </div>
+                        </button>
+                        <div id="dropdown-menu" class="absolute right-0 mt-2 w-48 glass-pane rounded-lg shadow-lg hidden z-50">
+                            <div class="py-2">
+                                <button id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 hover:text-red-300">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Generate New Content Page -->
+        <div id="generate-page" class="container mx-auto p-4 md:p-8 max-w-6xl">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Panel: Input & Customization -->
+                <div class="lg:col-span-1 glass-pane p-6 rounded-2xl">
+                    <h2 class="orbitron text-2xl font-semibold mb-6 border-b border-cyan-500/30 pb-3 text-cyan-300">1. Define Core Parameters</h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="prompt" class="block text-sm font-medium text-gray-400 mb-1">Lesson Topic</label>
+                            <input type="text" id="prompt" class="w-full p-3 rounded-lg form-input" placeholder="e.g., Quantum Entanglement">
+                            <p id="copilot" class="text-xs text-cyan-400/70 h-4 mt-1"></p>
+                        </div>
+                        <div>
+                            <label for="grade" class="block text-sm font-medium text-gray-400 mb-1">Academic Level</label>
+                            <select id="grade" class="w-full p-3 rounded-lg form-input">
+                                <option>High School (Introductory)</option>
+                                <option>University (Undergraduate)</option>
+                                <option>Postgraduate (Specialized)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-400 mb-1">Field of Study</label>
+                            <input type="text" id="subject" class="w-full p-3 rounded-lg form-input" placeholder="e.g., Physics">
+                        </div>
+                    </div>
+
+                    <h2 class="orbitron text-2xl font-semibold my-6 border-b border-cyan-500/30 pb-3 text-cyan-300">2. Advanced Customization</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="modalities" class="block text-sm font-medium text-gray-400 mb-1">Learning Modalities</label>
+                            <select id="modalities" class="w-full p-3 rounded-lg form-input">
+                                <option>Balanced (Visual, Auditory, Kinesthetic)</option>
+                                <option>Visual & Theoretical</option>
+                                <option>Interactive & Project-Based</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="context" class="block text-sm font-medium text-gray-400 mb-1">Global & Cultural Context</label>
+                            <select id="context" class="w-full p-3 rounded-lg form-input">
+                                <option>Standard/Global</option>
+                                <option>Include Historical Context (Asian)</option>
+                                <option>Include Historical Context (European)</option>
+                                <option>Focus on Modern Applications</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button id="generate-btn" class="w-full flex items-center justify-center font-bold py-3 px-4 rounded-lg btn-primary orbitron">
+                            <svg id="generate-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M4.268 12.182a2.82 2.82 0 0 0-2.82 2.82v2.828a2.82 2.82 0 0 0 2.82 2.828h2.828a2.82 2.82 0 0 0 2.82-2.82v-2.828a2.82 2.82 0 0 0-2.82-2.82zM4 16.5h.01"/><path d="m2.5 14.5.9.9a2 2 0 0 1 0 2.8l-.9.9"/><path d="m6.5 14.5-.9.9a2 2 0 0 0 0 2.8l.9.9"/></svg>
+                            <svg id="loading-spinner" class="animate-spin mr-3 h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <span id="generate-text">Architect Lesson</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Output & Visualization -->
+                <div id="output-container" class="lg:col-span-2 glass-pane p-6 rounded-2xl hidden">
+                    <div id="error" class="text-center my-6 hidden bg-red-900/50 text-red-300 p-4 rounded-lg border border-red-500/50"></div>
+                    <div id="output"></div>
+
+                    <!-- Additional Actions -->
+                    <div id="additional-actions" class="mt-8 border-t border-cyan-500/30 pt-6 hidden">
+                        <h3 class="orbitron text-xl font-semibold text-cyan-300 mb-4">Generate Additional Content</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <button id="generate-ppt" class="flex items-center px-4 py-2 btn-primary rounded-lg font-semibold">
+                                📊 Generate Presentation
+                            </button>
+                            <button id="generate-research" class="flex items-center px-4 py-2 btn-primary rounded-lg font-semibold">
+                                📄 Generate Research Doc
+                            </button>
+                            <button id="view-dashboard" class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-semibold transition-colors">
+                                📋 View in Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="placeholder-container" class="lg:col-span-2 glass-pane p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400/50 mb-4"><path d="M12 20h.01"/><path d="M12 4h.01"/><path d="M20 12h.01"/><path d="M4 12h.01"/><path d="M18.36 18.36h.01"/><path d="M5.64 5.64h.01"/><path d="M18.36 5.64h.01"/><path d="M5.64 18.36h.01"/><path d="M12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Z"/></svg>
+                    <h3 class="orbitron text-2xl text-cyan-300">Awaiting Generation Signal</h3>
+                    <p class="text-gray-400 mt-2">Define your lesson parameters and click "Architect Lesson" to generate the materials. The output will be visualized here.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="container mx-auto p-4 md:p-8 max-w-6xl hidden">
+            <div class="mb-8">
+                <h2 class="orbitron text-3xl font-bold glowing-text mb-4">Generation Dashboard</h2>
+                <p class="text-gray-400">Manage and revisit all your generated educational content</p>
+            </div>
+
+            <!-- Filters and Stats -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-pane p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-cyan-300" id="total-count">0</div>
+                    <div class="text-sm text-gray-400">Total Generated</div>
+                </div>
+                <div class="glass-pane p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-green-400" id="lesson-count">0</div>
+                    <div class="text-sm text-gray-400">Lesson Plans</div>
+                </div>
+                <div class="glass-pane p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-blue-400" id="ppt-count">0</div>
+                    <div class="text-sm text-gray-400">Presentations</div>
+                </div>
+                <div class="glass-pane p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-purple-400" id="research-count">0</div>
+                    <div class="text-sm text-gray-400">Research Docs</div>
+                </div>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="glass-pane p-4 rounded-lg mb-6">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Filter by Type:</label>
+                        <select id="filter-type" class="form-input p-2 rounded">
+                            <option value="all">All Content</option>
+                            <option value="lesson_plan">Lesson Plans</option>
+                            <option value="presentation">Presentations</option>
+                            <option value="research_document">Research Documents</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Search:</label>
+                        <input type="text" id="search-input" class="form-input p-2 rounded" placeholder="Search by title or topic...">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Sort by:</label>
+                        <select id="sort-by" class="form-input p-2 rounded">
+                            <option value="date-desc">Latest First</option>
+                            <option value="date-asc">Oldest First</option>
+                            <option value="title">Title A-Z</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div id="dashboard-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Generated content cards will appear here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="text-center py-12 hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-gray-500 mx-auto mb-4"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.4 0 4.55.94 6.14 2.47"/></svg>
+                <h3 class="text-xl font-semibold text-gray-400 mb-2">No content found</h3>
+                <p class="text-gray-500">Try adjusting your filters or generate some new content!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="forgot-password-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="glass-pane p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 class="orbitron text-xl font-semibold text-cyan-300 mb-4">Reset Password</h3>
+            <p class="text-gray-400 mb-4">Enter your email address and we'll send you reset instructions.</p>
+            <input type="email" id="reset-email" class="w-full p-3 rounded-lg form-input mb-4" placeholder="Enter your email">
+            <div class="flex gap-3">
+                <button id="send-reset" class="flex-1 btn-primary py-2 px-4 rounded-lg font-semibold">Send Reset Link</button>
+                <button id="cancel-reset" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-lg font-semibold transition-colors">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
