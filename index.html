@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduPlan AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom Tailwind Configuration with Pastel Colors and Poppins Font */
+      :root {
+        /* Pastel Palette */
+        --color-light-blue: #b3e5fc; /* Light Blue */
+        --color-lavender: #e6e0ff; /* Lavender */
+        --color-mint-green: #c8e6c9; /* Mint Green */
+        --color-peach: #ffccbc; /* Peach */
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        transition: all 0.5s ease-in-out; /* Smooth transitions between page content */
+      }
+      /* Custom gradient background */
+      .bg-pastel-gradient {
+        background: linear-gradient(
+          135deg,
+          var(--color-light-blue),
+          var(--color-lavender)
+        );
+      }
+      /* Common Card and Button Styles */
+      .card-base {
+        border-radius: 1.5rem; /* Rounded corners */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Shadow effects */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .btn-base {
+        padding: 0.75rem 1.5rem;
+        border-radius: 1.5rem;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+          background-color 0.2s ease;
+      }
+      .btn-base:hover {
+        transform: translateY(-2px); /* Hover animation */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .btn-primary {
+        background-color: #6c63ff; /* Deep Lavender/Purple */
+        color: white;
+      }
+      .btn-primary:hover {
+        background-color: #574fe8;
+      }
+
+      /* Specific Animation for the View Transition */
+      .page-transition {
+        animation: fadeIn 0.5s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Smart History Sidebar Styling */
+      .history-sidebar {
+        width: 300px;
+        right: -300px; /* Hidden state */
+        top: 0;
+        bottom: 0;
+        z-index: 50;
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth slide-out */
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.95
+        ); /* Slightly transparent white */
+        backdrop-filter: blur(5px);
+      }
+      .history-sidebar.open {
+        right: 0; /* Open state */
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-pastel-gradient flex flex-col">
+    <div
+      id="app-container"
+      class="flex-grow flex items-center justify-center p-4"
+    >
+      <div id="login-signup-view" class="w-full max-w-md page-transition">
+        <div class="card-base bg-white p-8 space-y-6">
+          <div class="flex p-1 bg-gray-100 rounded-full mb-6">
+            <button
+              id="login-tab"
+              class="flex-1 py-2 rounded-full font-semibold transition-colors bg-white shadow-md text-gray-800"
+            >
+              Login
+            </button>
+            <button
+              id="signup-tab"
+              class="flex-1 py-2 rounded-full font-semibold transition-colors text-gray-500"
+            >
+              Sign Up
+            </button>
+          </div>
+
+          <form id="auth-form" class="space-y-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <input
+                type="email"
+                id="email"
+                class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-light-blue focus:border-light-blue transition-all"
+                required
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="password"
+                class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-light-blue focus:border-light-blue transition-all"
+                required
+              />
+            </div>
+
+            <div id="confirm-password-field" class="space-y-2 hidden">
+              <label class="block text-sm font-medium text-gray-700"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                id="confirm-password"
+                class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-light-blue focus:border-light-blue transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="btn-base btn-primary w-full mt-6 text-xl"
+            >
+              Continue
+            </button>
+            <p
+              id="auth-error-message"
+              class="text-sm text-red-500 text-center hidden"
+            ></p>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="planner-view"
+        class="w-full max-w-5xl hidden page-transition"
+      ></div>
+    </div>
+
+    <nav
+      id="navbar"
+      class="hidden w-full bg-white bg-opacity-95 shadow-lg sticky top-0 z-10"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex-shrink-0">
+            <span class="text-2xl font-bold text-[#6C63FF]">EduPlan AI 📘</span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button
+              id="history-toggle"
+              class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              title="History"
+            >
+              <svg
+                class="w-6 h-6 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </button>
+            <button
+              id="account-icon"
+              class="p-2 rounded-full bg-light-blue hover:bg-light-blue/80 transition-colors"
+              title="Account"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div
+      id="history-sidebar"
+      class="history-sidebar fixed p-6 card-base overflow-y-auto"
+    >
+      <h3
+        class="text-xl font-bold mb-4 text-[#6C63FF] border-b pb-2 flex justify-between items-center"
+      >
+        Saved Plans 📚
+        <button id="close-history" class="text-gray-500 hover:text-gray-700">
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </h3>
+      <div id="history-list" class="space-y-3">
+        <p class="text-sm text-gray-500">
+          No saved plans yet. Generate and save one!
+        </p>
+      </div>
+    </div>
+    <div
+      id="history-overlay"
+      class="fixed inset-0 bg-black bg-opacity-30 z-40 hidden transition-opacity duration-300"
+    ></div>
+
+    <script>
+      // Set Tailwind colors in JS for easy use
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "light-blue": "var(--color-light-blue)",
+              lavender: "var(--color-lavender)",
+              "mint-green": "var(--color-mint-green)",
+              peach: "var(--color-peach)",
+            },
+          },
+        },
+      };
+    </script>
+    <script id="app-script">
+      // --- DATA & CONSTANTS ---
+      const VIEWS = {
+        LOGIN_SIGNUP: "login-signup-view",
+        PLANNER: "planner-view",
+      };
+
+      const GRADES = [
+        "LKG",
+        "UKG",
+        "Grade 1",
+        "Grade 2",
+        "Grade 3",
+        "Grade 4",
+        "Grade 5",
+        "Grade 6",
+        "Grade 7",
+        "Grade 8",
+        "Grade 9",
+        "Grade 10",
+        "Grade 11",
+        "Grade 12",
+        "Undergraduate",
+      ];
+
+      const SUBJECTS = [
+        "English",
+        "Math",
+        "Science",
+        "Social Studies",
+        "Telugu",
+        "Hindi",
+        "Other",
+      ];
+
+      const HISTORY_STORAGE_KEY = "eduplan_history";
+
+      // --- DOM ELEMENTS ---
+      const appContainer = document.getElementById("app-container");
+      const loginSignupView = document.getElementById(VIEWS.LOGIN_SIGNUP);
+      const plannerView = document.getElementById(VIEWS.PLANNER);
+      const navbar = document.getElementById("navbar");
+
+      // Auth Elements
+      const loginTab = document.getElementById("login-tab");
+      const signupTab = document.getElementById("signup-tab");
+      const authForm = document.getElementById("auth-form");
+      const confirmPasswordField = document.getElementById(
+        "confirm-password-field"
+      );
+      const authErrorMessage = document.getElementById("auth-error-message");
+
+      // History Elements
+      const historyToggle = document.getElementById("history-toggle");
+      const historySidebar = document.getElementById("history-sidebar");
+      const closeHistoryBtn = document.getElementById("close-history");
+      const historyList = document.getElementById("history-list");
+      const historyOverlay = document.getElementById("history-overlay");
+
+      let isLoginMode = true;
+
+      // --- CORE FUNCTIONS ---
+
+      /** Switches the application view with a smooth transition. */
+      function switchView(viewId) {
+        [loginSignupView, plannerView].forEach((view) => {
+          view.classList.remove("page-transition");
+          view.classList.add("hidden");
+        });
+
+        const targetView = document.getElementById(viewId);
+        if (targetView) {
+          targetView.classList.remove("hidden");
+          targetView.classList.add("page-transition");
+        }
+
+        // Handle Navbar Visibility
+        if (viewId === VIEWS.PLANNER) {
+          navbar.classList.remove("hidden");
+          appContainer.classList.remove("items-center"); // Center only login view
+          appContainer.classList.add("block");
+        } else {
+          navbar.classList.add("hidden");
+          appContainer.classList.add("items-center");
+          appContainer.classList.remove("block");
+        }
+      }
+
+      // --- AUTH LOGIC ---
+
+      /** Toggles the UI between Login and Sign Up modes. */
+      function toggleAuthMode(isLogin) {
+        isLoginMode = isLogin;
+
+        // Tab styling
+        if (isLogin) {
+          loginTab.classList.add("bg-white", "shadow-md", "text-gray-800");
+          loginTab.classList.remove("text-gray-500");
+          signupTab.classList.remove("bg-white", "shadow-md", "text-gray-800");
+          signupTab.classList.add("text-gray-500");
+          confirmPasswordField.classList.add("hidden");
+          document
+            .getElementById("confirm-password")
+            .removeAttribute("required");
+        } else {
+          signupTab.classList.add("bg-white", "shadow-md", "text-gray-800");
+          signupTab.classList.remove("text-gray-500");
+          loginTab.classList.remove("bg-white", "shadow-md", "text-gray-800");
+          loginTab.classList.add("text-gray-500");
+          confirmPasswordField.classList.remove("hidden");
+          document
+            .getElementById("confirm-password")
+            .setAttribute("required", "required");
+        }
+        authErrorMessage.classList.add("hidden");
+      }
+
+      /** Handles form submission (Login/Sign Up). */
+      function handleAuthSubmit(e) {
+        e.preventDefault();
+        authErrorMessage.classList.add("hidden");
+
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirm-password").value;
+
+        if (!isLoginMode && password !== confirmPassword) {
+          authErrorMessage.textContent = "Passwords do not match.";
+          authErrorMessage.classList.remove("hidden");
+          return;
+        }
+
+        // In a real app, this would be an API call. Here, we simulate success.
+        // console.log(isLoginMode ? "Logging in..." : "Signing up...");
+        // Simulate smooth transition after successful login/signup
+        setTimeout(() => {
+          renderPlannerView();
+          switchView(VIEWS.PLANNER);
+        }, 300);
+      }
+
+      // --- LESSON PLANNER LOGIC (VIEW RENDERING) ---
+
+      /** Renders the Lesson Planner main view structure. */
+      function renderPlannerView() {
+        plannerView.innerHTML = `
+                <div class="card-base bg-white p-6 md:p-10 space-y-8">
+                    <h2 class="text-3xl font-bold text-[#6C63FF] mb-4 flex items-center">
+                        <span class="mr-2">Lesson Generator</span> <svg class="w-8 h-8 text-peach" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM6 9a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h6a1 1 0 100-2H7z"></path></svg>
+                    </h2>
+
+                    <form id="lesson-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <select id="subject" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-mint-green focus:border-mint-green transition-all bg-white" required>
+                                    <option value="" disabled selected>Select a Subject</option>
+                                    ${SUBJECTS.map(
+                                      (s) =>
+                                        <option value="${s}">${s}</option>
+                                    ).join("")}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="grade" class="block text-sm font-medium text-gray-700 mb-1">Grade Level</label>
+                                <select id="grade" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-mint-green focus:border-mint-green transition-all bg-white" required>
+                                    <option value="" disabled selected>Select a Grade</option>
+                                    ${GRADES.map(
+                                      (g) =>
+                                        <option value="${g}">${g}</option>
+                                    ).join("")}
+                                </select>
+                            </div>
+
+                            <div class="md:col-span-1">
+                                <label for="topic" class="block text-sm font-medium text-gray-700 mb-1">Topic Name</label>
+                                <input type="text" id="topic" placeholder="e.g., Photosynthesis" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-mint-green focus:border-mint-green transition-all" required>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-100">
+                            <button type="button" id="clear-fields" class="btn-base bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                Clear Fields
+                            </button>
+                            <button type="submit" id="generate-plan-btn" class="btn-base btn-primary text-lg flex items-center justify-center">
+                                Generate Lesson Plan
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="output-area" class="hidden space-y-6 pt-6 border-t border-gray-200">
+                        <h3 class="text-2xl font-semibold text-gray-800 flex items-center">
+                            Generated Content <span id="loading-spinner" class="ml-3 hidden">
+                                <svg class="animate-spin h-5 w-5 text-[#6C63FF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div id="plan-cards" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            </div>
+
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button type="button" id="save-plan-btn" class="btn-base bg-mint-green text-gray-800 hover:bg-mint-green/80 flex items-center">
+                                Save to History <span id="save-feedback" class="ml-2"></span>
+                            </button>
+                            <button type="button" id="download-pdf-btn" class="btn-base bg-peach text-gray-800 opacity-50 cursor-not-allowed" disabled>
+                                Download as PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        attachPlannerEventListeners();
+      }
+
+      /** Attaches event listeners to the Lesson Planner form and buttons. */
+      function attachPlannerEventListeners() {
+        const lessonForm = document.getElementById("lesson-form");
+        const clearFieldsBtn = document.getElementById("clear-fields");
+        const savePlanBtn = document.getElementById("save-plan-btn");
+
+        lessonForm.addEventListener("submit", handleGeneratePlan);
+        clearFieldsBtn.addEventListener("click", () => lessonForm.reset());
+        savePlanBtn.addEventListener("click", saveCurrentPlan);
+      }
+
+      /** Handles the Generate Lesson Plan submission. */
+      function handleGeneratePlan(e) {
+        e.preventDefault();
+        const form = e.target;
+        const outputArea = document.getElementById("output-area");
+        const planCards = document.getElementById("plan-cards");
+        const loadingSpinner = document.getElementById("loading-spinner");
+        const generateBtn = document.getElementById("generate-plan-btn");
+
+        // Collect data
+        const subject = form.subject.value;
+        const grade = form.grade.value;
+        const topic = form.topic.value.trim();
+
+        if (!subject || !grade || !topic) return;
+
+        // Start loading animation
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Generating...";
+        loadingSpinner.classList.remove("hidden");
+        outputArea.classList.add("hidden");
+        planCards.innerHTML = "";
+
+        // Simulate AI generation time (3 seconds)
+        setTimeout(() => {
+          const planData = generateDummyPlan(subject, grade, topic);
+          renderPlanOutput(planData);
+
+          // Stop loading animation and enable button
+          generateBtn.disabled = false;
+          generateBtn.textContent = "Generate Lesson Plan";
+          loadingSpinner.classList.add("hidden");
+          outputArea.classList.remove("hidden");
+
+          // Store plan data on the button for easy access during saving
+          document.getElementById("save-plan-btn").planData = planData;
+        }, 2000);
+      }
+
+      /** Renders the generated plan content into the output area. */
+      function renderPlanOutput(data) {
+        const planCards = document.getElementById("plan-cards");
+
+        const cardTemplate = (title, content, bgColorClass) => `
+                <div class="card-base p-5 ${bgColorClass} shadow-lg" style="animation: fade-in 0.5s ease-out;">
+                    <h4 class="text-xl font-bold mb-3 border-b border-white/50 pb-2">${title}</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                        ${content.map((item) => <li>${item}</li>).join("")}
+                    </ul>
+                </div>
+            `;
+
+        planCards.innerHTML = `
+                ${cardTemplate(
+                  "Lesson Plan (50 min)",
+                  data.lessonPlan,
+                  "bg-light-blue text-gray-800"
+                )}
+                ${cardTemplate(
+                  "PPT Outline",
+                  data.pptOutline,
+                  "bg-lavender text-gray-800"
+                )}
+                ${cardTemplate(
+                  "Quiz Questions",
+                  data.quizQuestions,
+                  "bg-mint-green text-gray-800"
+                )}
+                ${cardTemplate(
+                  "Homework",
+                  data.homework,
+                  "bg-peach text-gray-800"
+                )}
+            `;
+      }
+
+      /** Generates placeholder lesson plan data. */
+      function generateDummyPlan(subject, grade, topic) {
+        return {
+          subject,
+          grade,
+          topic,
+          timestamp: new Date().toISOString(),
+          lessonPlan: [
+            "0-5 min: Warm-up & Introduction (K-W-L Chart)",
+            "5-20 min: Direct Instruction/Lecture on " + topic,
+            "20-35 min: Group Activity/Experiment",
+            "35-45 min: Guided Practice & Check for Understanding",
+            "45-50 min: Summary and Wrap-up",
+          ],
+          pptOutline: [
+            "Slide 1: Title & Learning Objectives",
+            "Slide 2: Key Vocabulary",
+            "Slide 3-5: Core Concepts (Detailed explanation)",
+            "Slide 6: Visual Example/Diagram",
+            "Slide 7: Review and Next Steps",
+          ],
+          quizQuestions: [
+            "Easy: What is the main function of a cell?",
+            "Easy: Define the term: " + topic,
+            "Hard: Explain the causal relationship between X and Y.",
+            "Hard: Propose an alternative method for Z.",
+          ],
+          homework: [
+            "Complete the worksheet on the chapter 3 vocabulary.",
+            "Write a 1-page summary of today's lesson.",
+            "Prepare for a short quiz tomorrow.",
+          ],
+        };
+      }
+
+      // --- HISTORY LOGIC (localStorage) ---
+
+      /** Loads history from localStorage. */
+      function loadHistory() {
+        const historyJson = localStorage.getItem(HISTORY_STORAGE_KEY);
+        return historyJson ? JSON.parse(historyJson) : [];
+      }
+
+      /** Saves the current plan to history, handling updates and moving to top. */
+      function saveCurrentPlan() {
+        const planData = document.getElementById("save-plan-btn").planData;
+        const saveFeedback = document.getElementById("save-feedback");
+
+        if (!planData) {
+          saveFeedback.innerHTML = "❌";
+          setTimeout(() => (saveFeedback.innerHTML = ""), 1000);
+          return;
+        }
+
+        let history = loadHistory();
+        const { subject, grade, topic } = planData;
+        const key = ${subject}-${grade}-${topic};
+
+        // 1. Check for and remove existing duplicate
+        const existingIndex = history.findIndex((p) => p.key === key);
+        if (existingIndex !== -1) {
+          history.splice(existingIndex, 1); // Remove the old plan
+        }
+
+        // 2. Create the new, minimal history item (use the full plan for viewing)
+        const historyItem = {
+          key,
+          subject,
+          grade,
+          topic,
+          lastUpdated: new Date().toLocaleString(),
+          fullPlan: planData, // Store full data for later retrieval
+        };
+
+        // 3. Add to the top
+        history.unshift(historyItem);
+
+        // 4. Save back to localStorage
+        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+
+        // 5. Update UI
+        renderHistorySidebar();
+        saveFeedback.innerHTML = "🎉 Saved!";
+        setTimeout(() => (saveFeedback.innerHTML = ""), 1500);
+      }
+
+      /** Renders the history sidebar content. */
+      function renderHistorySidebar() {
+        const history = loadHistory();
+
+        if (history.length === 0) {
+          historyList.innerHTML =
+            '<p class="text-sm text-gray-500">No saved plans yet. Generate and save one!</p>';
+          return;
+        }
+
+        historyList.innerHTML = history
+          .map(
+            (item, index) => `
+                <div class="p-3 bg-white hover:bg-gray-50 border-l-4 border-[#C8E6C9] card-base shadow-sm space-y-1 text-sm flex flex-col transition-all duration-200">
+                    <p class="font-semibold text-gray-800">${item.topic}</p>
+                    <p class="text-gray-500">${item.subject} (${item.grade})</p>
+                    <p class="text-xs text-gray-400">Updated: ${item.lastUpdated}</p>
+                    <button data-key="${item.key}" class="view-plan-btn text-xs text-[#6C63FF] hover:text-[#574FE8] self-end mt-1 font-medium">
+                        View Plan
+                    </button>
+                </div>
+            `
+          )
+          .join("");
+
+        // Attach event listeners for the 'View Plan' buttons
+        document.querySelectorAll(".view-plan-btn").forEach((button) => {
+          button.addEventListener("click", (e) => {
+            const key = e.target.dataset.key;
+            viewHistoryPlan(key);
+          });
+        });
+      }
+
+      /** Opens a plan from history and displays it in the output area. */
+      function viewHistoryPlan(key) {
+        const history = loadHistory();
+        const planItem = history.find((p) => p.key === key);
+
+        if (planItem) {
+          // 1. Close sidebar
+          historySidebar.classList.remove("open");
+          historyOverlay.classList.add("hidden");
+
+          // 2. Populate form fields (optional but good UX)
+          document.getElementById("subject").value = planItem.subject;
+          document.getElementById("grade").value = planItem.grade;
+          document.getElementById("topic").value = planItem.topic;
+
+          // 3. Render the output
+          renderPlanOutput(planItem.fullPlan);
+          document.getElementById("output-area").classList.remove("hidden");
+          document.getElementById("save-plan-btn").planData = planItem.fullPlan; // Set for re-saving/updating
+
+          // Scroll to the output area
+          plannerView.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      // --- INTERACTIVITY & ANIMATIONS LOGIC ---
+
+      /** Toggles the history sidebar open/closed. */
+      function toggleHistorySidebar() {
+        const isOpen = historySidebar.classList.toggle("open");
+        if (isOpen) {
+          renderHistorySidebar(); // Ensure fresh data when opening
+          historyOverlay.classList.remove("hidden");
+        } else {
+          historyOverlay.classList.add("hidden");
+        }
+      }
+
+      // --- INITIALIZATION ---
+
+      function init() {
+        // Event listeners for Auth mode tabs
+        loginTab.addEventListener("click", () => toggleAuthMode(true));
+        signupTab.addEventListener("click", () => toggleAuthMode(false));
+        toggleAuthMode(true); // Default to login mode
+
+        // Event listener for Auth Form submission
+        authForm.addEventListener("submit", handleAuthSubmit);
+
+        // Event listeners for History Sidebar
+        historyToggle.addEventListener("click", toggleHistorySidebar);
+        closeHistoryBtn.addEventListener("click", toggleHistorySidebar);
+        historyOverlay.addEventListener("click", toggleHistorySidebar);
+
+        // Placeholder for Account Icon click (e.g., popup)
+        document
+          .getElementById("account-icon")
+          .addEventListener("click", () => {
+            alert("Account Info: Logged in user details (Placeholder Popup)");
+          });
+
+        // Set initial view
+        switchView(VIEWS.LOGIN_SIGNUP);
+      }
+
+      init();
+    </script>
+  </body>
+</html>
