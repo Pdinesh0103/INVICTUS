@@ -1,18 +1,18 @@
-# Welcome to your Lovable project
+# Welcome to our hackathon project
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/ad460539-978d-43f4-a71e-02610eea989d
+**URL**: invictus-sable.vercel.app
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ad460539-978d-43f4-a71e-02610eea989d) and start prompting.
 
-Changes made via Lovable will be committed automatically to this repo.
+Simply visit the invictus-sable.vercel.app
+
+Changes made via our codebase will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
@@ -62,12 +62,11 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/ad460539-978d-43f4-a71e-02610eea989d) and click on Share -> Publish.
+Simply open the project and run this two commands:
+1. npm run build
+2. npm run deploy
 
-## Can I connect a custom domain to my Lovable project?
+## Can you connect a custom domain to my Project?
 
-Yes, you can!
+NO, This project belongs to our team.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
