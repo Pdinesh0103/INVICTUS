@@ -3,7 +3,11 @@
 ## Project info
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 **URL**: [invictus- (sable.vercel.app)](https://invictus-sable.vercel.app/)
+=======
+**URL**: invictus-sable.vercel.app
+>>>>>>> parent of b74771e (Update README.md)
 =======
 **URL**: invictus-sable.vercel.app
 >>>>>>> parent of b74771e (Update README.md)
