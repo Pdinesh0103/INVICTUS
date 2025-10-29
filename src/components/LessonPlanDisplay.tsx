@@ -34,6 +34,7 @@ export default function LessonPlanDisplay({ data }: LessonPlanDisplayProps) {
   };
 
   return (
+    <>
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Title */}
       <div className="text-center border-b border-primary/30 pb-4">
@@ -140,5 +141,6 @@ export default function LessonPlanDisplay({ data }: LessonPlanDisplayProps) {
         </div>
       </section>
     </div>
+    </>
   );
 }
